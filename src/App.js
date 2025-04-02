@@ -3,8 +3,6 @@ import io from "socket.io-client";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-
-// Fix Leaflet marker icon issue in React
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
 
@@ -19,7 +17,7 @@ const customIcon = new L.Icon({
 });
 
 const App = () => {
-    const [location, setLocation] = useState({ lat: 20.5937, lng: 78.9629 }); // Default to India
+    const [location, setLocation] = useState({ lat: 20.5937, lng: 78.9629 });
 
     useEffect(() => {
         socket.on("locationUpdate", (data) => {
@@ -31,9 +29,19 @@ const App = () => {
         return () => socket.off("locationUpdate");
     }, []);
 
+    const handleCallDevice = () => {
+        fetch("https://gps-data-rbrs.onrender.com/call-device", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+        });
+    };
+
     return (
         <div style={{ textAlign: "center", marginTop: "20px", width: "100vw", height: "100vh" }}>
             <h1>Live GPS Tracker</h1>
+            <button onClick={handleCallDevice} style={{ padding: "10px 20px", marginBottom: "10px" }}>
+                Call Device
+            </button>
             <MapContainer
                 center={[location.lat, location.lng]}
                 zoom={15}
